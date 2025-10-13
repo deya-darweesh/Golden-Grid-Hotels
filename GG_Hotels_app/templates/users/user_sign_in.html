@@ -8,6 +8,23 @@
 
 <h1> Sign in page for users</h1>
 
+<form  method="post">
+        {% csrf_token %}
+        
+        {% if form %}
+            {% for field in form %}
+                {{field.label_tag}}
+                {{field}}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <p style="color:red">{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <button type='submit'>Sign in</button>
+    </form>
+
 {% endblock content %}
 
 
