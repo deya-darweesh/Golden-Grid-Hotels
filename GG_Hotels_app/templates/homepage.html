@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Homepage{% endblock title %} 
+{% block head %}
+
+{% endblock head %}
+
+{% block content %}
+<header>
+    <nav>
+        <div class="logoname">
+            <h1> Golden Grid Hotels </h1>
+        </div>
+
+        <div class="navlinks">
+            <a href="{% url "homepage" %}">Homepage</a>
+            <a href="{% url "hotels_list" %}">Hotels</a> <!-- then hotel name that show rooms of this hotel -->
+            <a href="Rooms">Rooms</a> <!-- optional but it get all rooms table and show -->
+            <a href="About_us">About Us</a>
+        </div>
+
+        <div class="log_in_up">
+            <!-- maybe extend template for both with some changes and forms -->
+            <a href="{% url "sign_in" %}">User sign in</a>
+            <a href="{% url "sign_up" %}">User sign up</a>
+        </div>
+    </nav>
+    </header>
+
+
+
+
+    <footer>
+        <div>
+            <nav>
+                <a href="">Hotel Admin Panel</a>
+                <a href="{% url "hotel_sign_in" %}">Hotel sign in</a> 
+                <a href="{% url "hotel_sign_up" %}">Hotel sign up</a>
+            </nav>
+        </div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </footer>
+{% endblock content %}
+
