@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Room, Service, Booking, Booking_Service
 from django.contrib.auth.models import User
-from .forms import UserSignInForm, CustomUserSignUpForm
+from .forms import UserSignInForm, CustomUserSignUpForm, CustomHotelSignUpForm, HotelSignInForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, authenticate, logout
 # Create your views here.
@@ -63,13 +63,51 @@ def user_logout(request):
 
 
 def hotel_sign_up(request):
+    error_message = ''
+    if request.method == 'POST':
+        form = CustomHotelSignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('hotel_admin_panel')
+        else:
+            error_message = 'Invalid sign-up - try again'
     
-    return render(request, 'hotels/hotel_sign_up.html')
+    form = CustomHotelSignUpForm()
+    return render(request, 'hotels/hotel_sign_up.html', {
+        'form': form, 
+        'error_message': error_message
+    })
 
 
 def hotel_sign_in(request):
-    
-    return render(request, 'hotels/hotel_sign_in.html')
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        try:
+            user = User.objects.get(email=email, is_staff=True)
+            auth_user = authenticate(request, username=user.username, password=password)
+            if auth_user:
+                login(request, auth_user)
+                return redirect('hotel_admin_panel')
+            else:
+                error = 'Invalid email or password.'
+                form = HotelSignInForm()
+                return render(request, 'hotels/hotel_sign_in.html', {'form': form, 'error': error})
+        except User.DoesNotExist:
+            error = 'Hotel email does not exist.'
+            form = HotelSignInForm()
+            return render(request, 'hotels/hotel_sign_in.html', {'form': form, 'error': error})
+    else:
+        form = HotelSignInForm()
+        return render(request, 'hotels/hotel_sign_in.html', {'form': form})
+
+
+def hotel_admin_panel(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('hotel_sign_in')
+    return render(request, 'hotels/full_hotel_panel.html')
 
 
 def hotels_list(request):

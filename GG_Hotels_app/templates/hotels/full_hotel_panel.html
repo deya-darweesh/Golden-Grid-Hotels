@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+
+<h1>Hotel Admin Panel</h1>
+
+<div>
+    <h2>Welcome, {{ user.first_name }}!</h2>
+    <p>Hotel Username: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+</div>
+
+<div>
+    <h3>Hotel Management</h3>
+    <p>General hotel information and management tools will be added here.</p>
+    <!-- Future features: Add rooms, manage bookings, etc. -->
+</div>
+
+<div>
+    <a href="{% url 'logout' %}">Logout</a>
+</div>
+
+{% endblock content %}
