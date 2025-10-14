@@ -2,9 +2,12 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Room, Service, Booking, Booking_Service
 from django.contrib.auth.models import User
-from .forms import UserSignUpForm, UserSignInForm
-
+from .forms import UserSignInForm, CustomUserSignUpForm
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import login, authenticate, logout
 # Create your views here.
+
+
 
 
 def homepage(request):
@@ -13,36 +16,50 @@ def homepage(request):
 
 
 def user_sign_up(request):
+    error_message = ''
     if request.method == 'POST':
-        form = UserSignUpForm(request.POST)
+        form = CustomUserSignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
+            login(request, user)
             return redirect(reverse('homepage'))
         else:
-            return render(request, 'users/user_sign_up.html', {'form': form})
-    elif request.method == 'GET':
-        form = UserSignUpForm()
-        return render(request, 'users/user_sign_up.html', {'form': form})
+            error_message = 'Invalid sign-up - try again'
+    
+    form = CustomUserSignUpForm()
+    return render(request, 'users/user_sign_up.html', {
+        'form': form, 
+        'error_message': error_message
+    })
 
 
 def user_sign_in(request):
     if request.method == 'POST':
-        form = UserSignInForm(request.POST)
-        if form.is_valid():
-            email = request.POST.get('email')
-            password = request.POST.get('password')
-            try:
-                user = User.objects.get(email=email)
-                if user.password == password:
-                    return redirect(reverse('homepage'))
-                else:
-                    form.add_error('email', 'Invalid email or password.')
-            except User.DoesNotExist:
-                form.add_error('email', 'Email does not exist.')
-        return render(request, 'users/user_sign_in.html', {'form': form})
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        try:
+            user = User.objects.get(email=email)
+            auth_user = authenticate(request, username=user.username, password=password)
+            if auth_user:
+                login(request, auth_user)
+                return redirect(reverse('homepage'))
+            else:
+                error = 'Invalid email or password.'
+                form = UserSignInForm()
+                return render(request, 'users/user_sign_in.html', {'form': form, 'error': error})
+        except User.DoesNotExist:
+            error = 'Email does not exist.'
+            form = UserSignInForm()
+            return render(request, 'users/user_sign_in.html', {'form': form, 'error': error})
     else:
         form = UserSignInForm()
         return render(request, 'users/user_sign_in.html', {'form': form})
+
+
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('homepage'))
 
 
 def hotel_sign_up(request):
@@ -68,4 +85,3 @@ def hotels_list(request):
 # def hotel_rooms_list(request):
 #     pass
 #     return render(request, 'gg_pages/hotel_rooms_list.html')
-

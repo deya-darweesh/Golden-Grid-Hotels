@@ -8,21 +8,15 @@
 
 <h1> Sign up page for users</h1>
 
-<form  method="post">
-        {% csrf_token %}
+{% if error_message %}
+    <p style="color:red">{{ error_message }}</p>
+{% endif %}
 
-        {% for field in form %}
-            {{field.label_tag}}
-            {{field}}
-            {% if field.errors %}
-                {% for error in field.errors %}
-                    <p style="color:red">{{ error }}</p>
-                {% endfor %}
-            {% endif %}
-        
-        {% endfor %}
-        <button type='submit'>Create</button>
-    </form>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type='submit'>Create</button>
+</form>
 
 {% endblock content %}
 

@@ -20,9 +20,16 @@
         </div>
 
         <div class="log_in_up">
-            <!-- maybe extend template for both with some changes and forms -->
-            <a href="{% url "sign_in" %}">User sign in</a>
-            <a href="{% url "sign_up" %}">User sign up</a>
+            {% if user.is_authenticated %}
+                <span>Welcome, {{ user.first_name|default:user.username }}!</span>
+                <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url "sign_in" %}">User sign in</a>
+                <a href="{% url "sign_up" %}">User sign up</a>
+            {% endif %}
         </div>
     </nav>
     </header>

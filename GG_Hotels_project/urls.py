@@ -20,5 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('GG_Hotels_app.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     
 ]
