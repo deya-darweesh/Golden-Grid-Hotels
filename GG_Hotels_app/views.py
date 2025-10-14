@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Room, Service, Booking, Booking_Service
 from django.contrib.auth.models import User
-from .forms import UserSignInForm, CustomUserSignUpForm, CustomHotelSignUpForm, HotelSignInForm
+from .forms import UserSignInForm, CustomUserSignUpForm, CustomHotelSignUpForm, HotelSignInForm, RoomForm
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import login, authenticate, logout
 # Create your views here.
@@ -107,7 +107,52 @@ def hotel_sign_in(request):
 def hotel_admin_panel(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return redirect('hotel_sign_in')
-    return render(request, 'hotels/full_hotel_panel.html')
+    
+    hotel_rooms = Room.objects.filter(hotel_id=request.user)
+    return render(request, 'hotels/full_hotel_panel.html', {'hotel_rooms': hotel_rooms})
+
+
+def add_room(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('hotel_sign_in')
+    
+    if request.method == 'POST':
+        form = RoomForm(request.POST)
+        if form.is_valid():
+            room = form.save(commit=False)
+            room.hotel_id = request.user
+            room.save()
+            return redirect('hotel_admin_panel')
+    else:
+        form = RoomForm()
+    
+    return render(request, 'hotels/add_room.html', {'form': form})
+
+
+def edit_room(request, room_id):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('hotel_sign_in')
+    
+    room = Room.objects.get(id=room_id, hotel_id=request.user)
+    
+    if request.method == 'POST':
+        form = RoomForm(request.POST, instance=room)
+        if form.is_valid():
+            form.save()
+            return redirect('hotel_admin_panel')
+    else:
+        form = RoomForm(instance=room)
+    
+    return render(request, 'hotels/edit_room.html', {'form': form, 'room': room})
+
+
+def delete_room(request, room_id):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return redirect('hotel_sign_in')
+    
+    room = Room.objects.get(id=room_id, hotel_id=request.user)
+    room.delete()
+    return redirect('hotel_admin_panel')
 
 
 def hotels_list(request):

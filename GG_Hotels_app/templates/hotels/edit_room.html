@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+
+<h1>Edit Room: {{ room.room_type }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Update Room</button>
+    <a href="{% url 'hotel_admin_panel' %}">Cancel</a>
+</form>
+
+{% endblock content %}

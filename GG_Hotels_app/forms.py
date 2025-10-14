@@ -64,18 +64,23 @@ class CustomHotelSignUpForm(UserCreationForm):
 class HotelSignInForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
+
+class RoomForm(forms.ModelForm):
     class Meta:
-        model = User
-        fields = ['email', 'password']
+        model = Room
+        fields = ['room_type', 'price_per_night', 'capacity', 'description', 'quantity']
         widgets = {
-            'password': forms.PasswordInput,
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'room_type': forms.Select(choices=[
+                ('Single', 'Single'),
+                ('Double', 'Double'),
+                ('Triple', 'Triple'),
+                ('VIP', 'VIP')
+            ])
         }
-        error_messages = {
-            'email': {
-                'required': 'Please enter your email address.',
-                'invalid': 'Please enter a valid email address.'
-            },
-            'password': {
-                'required': 'Please enter your password.'
-            }
-        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['room_type'].help_text = None
+        self.fields['price_per_night'].help_text = "Price per night in USD"
+        self.fields['capacity'].help_text = "Number of people"
