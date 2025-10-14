@@ -11,8 +11,8 @@ from django.contrib.auth import login, authenticate, logout
 
 
 def homepage(request):
-    
-    return render(request, 'homepage.html')
+    hotels = User.objects.filter(is_staff=True)
+    return render(request, 'homepage.html', {'hotels': hotels})
 
 
 def user_sign_up(request):
@@ -73,8 +73,8 @@ def hotel_sign_in(request):
 
 
 def hotels_list(request):
-    
-    return render(request, 'gg_pages/hotels_list.html')
+    hotels = User.objects.filter(is_staff=True)
+    return render(request, 'gg_pages/hotels_list.html', {'hotels': hotels})
 
 
 # def rooms_list(request):

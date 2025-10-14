@@ -34,8 +34,20 @@
     </nav>
     </header>
 
-
-
+    <main>
+        <section>
+            <h2>Available Hotels</h2>
+            {% for hotel in hotels %}
+                <div>
+                    <h3>{{ hotel.first_name }} {{ hotel.last_name }}</h3>
+                    <p>Contact: {{ hotel.email }}</p>
+                    <p>Username: {{ hotel.username }}</p>
+                </div>
+            {% empty %}
+                <p>No hotels available</p>
+            {% endfor %}
+        </section>
+    </main>
 
     <footer>
         <div>
