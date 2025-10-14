@@ -84,3 +84,15 @@ class RoomForm(forms.ModelForm):
         self.fields['room_type'].help_text = None
         self.fields['price_per_night'].help_text = "Price per night in USD"
         self.fields['capacity'].help_text = "Number of people"
+
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = ['name', 'price', 'description', 'available']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['price'].help_text = "Price in USD"
