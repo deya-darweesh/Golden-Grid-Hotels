@@ -77,11 +77,12 @@ def hotels_list(request):
     return render(request, 'gg_pages/hotels_list.html', {'hotels': hotels})
 
 
-# def rooms_list(request):
-#     pass
-#     return render(request, 'homepage.html')
+def rooms_list(request):
+    rooms = Room.objects.all()
+    return render(request, 'gg_pages/rooms_list.html', {'rooms': rooms})
 
 
-# def hotel_rooms_list(request):
-#     pass
-#     return render(request, 'gg_pages/hotel_rooms_list.html')
+def hotel_rooms_list(request, hotel_id):
+    hotel = User.objects.get(id=hotel_id)
+    rooms = Room.objects.filter(hotel_id=hotel_id)
+    return render(request, 'gg_pages/hotel_rooms_list.html', {'rooms': rooms, 'hotel': hotel})

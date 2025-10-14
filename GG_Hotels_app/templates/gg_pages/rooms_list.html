@@ -6,11 +6,12 @@
 
 {% block content %}
 
-<h1>{{ hotel.first_name }} {{ hotel.last_name }} - Hotel Rooms</h1>
+<h1>All Rooms List</h1>
 
 {% for room in rooms %}
     <div>
         <h2>{{ room.room_type }} Room</h2>
+        <p><strong>Hotel:</strong> {{ room.hotel_id.first_name }} {{ room.hotel_id.last_name }}</p>
         <p><strong>Price per Night:</strong> ${{ room.price_per_night }}</p>
         <p><strong>Capacity:</strong> {{ room.capacity }} person(s)</p>
         <p><strong>Available Rooms:</strong> {{ room.quantity }}</p>
@@ -20,11 +21,7 @@
         <hr>
     </div>
 {% empty %}
-    <p>This hotel has no rooms available</p>
+    <p>No rooms available</p>
 {% endfor %}
 
-<a href="{% url 'hotels_list' %}">← Back to Hotels List</a>
-
 {% endblock content %}
-
-

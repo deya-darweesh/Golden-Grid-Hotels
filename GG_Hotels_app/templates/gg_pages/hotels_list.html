@@ -13,6 +13,7 @@
         <h2>{{ hotel.first_name }} {{ hotel.last_name }}</h2>
         <p>Email: {{ hotel.email }}</p>
         <p>Hotel Username: {{ hotel.username }}</p>
+        <a href="{% url 'hotel_rooms_list' hotel.id %}">View Rooms</a>
         <hr>
     </div>
 {% empty %}
