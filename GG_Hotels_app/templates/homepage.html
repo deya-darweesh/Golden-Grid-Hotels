@@ -22,9 +22,10 @@
         <div class="log_in_up">
             {% if user.is_authenticated %}
                 <span>Welcome, {{ user.first_name|default:user.username }}!</span>
+                <a href="{% url 'user_profile' %}">Profile</a>
                 <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit">Logout</button>
+                    <button type="submit">Sign Out</button>
                 </form>
             {% else %}
                 <a href="{% url "sign_in" %}">User sign in</a>

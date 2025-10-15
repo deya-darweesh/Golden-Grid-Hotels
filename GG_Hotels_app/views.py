@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import Room, Service, Booking, Booking_Service
 from django.contrib.auth.models import User
-from .forms import UserSignInForm, CustomUserSignUpForm, CustomHotelSignUpForm, HotelSignInForm, RoomForm, ServiceForm, BookingForm
+from .forms import UserSignInForm, CustomUserSignUpForm, CustomHotelSignUpForm, HotelSignInForm, RoomForm, ServiceForm, BookingForm, UserProfileForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -263,3 +263,28 @@ def create_booking(request, room_id):
     }
     
     return render(request, 'booking/booking_form.html', context)
+
+
+@login_required
+def user_profile(request):
+    if request.user.is_staff:
+        messages.error(request, "Hotels should use the admin panel instead.")
+        return redirect('hotel_admin_panel')
+    
+    if request.method == 'POST':
+        if 'delete_account' in request.POST:
+            user = request.user
+            logout(request)
+            user.delete()
+            messages.success(request, "Your account has been deleted successfully.")
+            return redirect('homepage')
+        else:
+            form = UserProfileForm(request.POST, instance=request.user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Your profile has been updated successfully.")
+                return redirect('user_profile')
+    else:
+        form = UserProfileForm(instance=request.user)
+    
+    return render(request, 'users/user-panel.html', {'form': form})

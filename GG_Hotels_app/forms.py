@@ -138,3 +138,19 @@ class BookingForm(forms.ModelForm):
                 raise forms.ValidationError("Check-in date cannot be in the past.")
         
         return cleaned_data
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+        widgets = {
+            'username': forms.TextInput(attrs={'readonly': 'readonly'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].help_text = "Username cannot be changed"
+        self.fields['first_name'].help_text = "Your first name"
+        self.fields['last_name'].help_text = "Your last name"
+        self.fields['email'].help_text = "Your email address"
