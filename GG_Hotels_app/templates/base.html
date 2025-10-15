@@ -3,18 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Document{% endblock title %}</title>
+    <title>{% block title %}Golden Grid Hotels{% endblock title %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block head %}
     
     {% endblock head %}
 </head>
 <body>
-    {% comment %} header {% endcomment %}
-        
-    {% block content %}
-    
-    {% endblock content %}
+    <header>
+        <nav>
+            <div class="logoname">
+                <img src="{% static 'img/logo.png' %}" alt="Golden Grid Hotels Logo">
+                <h1>Golden Grid Hotels</h1>
+            </div>
 
-    {% comment %} footer  {% endcomment %}
+            <div class="navlinks">
+                <a href="{% url "homepage" %}">Homepage</a>
+                <a href="{% url "hotels_list" %}">Hotels</a>
+                <a href="{% url "rooms_list" %}">All Rooms</a>
+                <a href="About_us">About Us</a>
+            </div>
+
+            <div class="log_in_up">
+                {% if user.is_authenticated %}
+                    <span>Welcome, {{ user.first_name|default:user.username }}!</span>
+                    <a href="{% url 'user_profile' %}">Profile</a>
+                    <form id="logout-form" method="post" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit">Sign Out</button>
+                    </form>
+                {% else %}
+                    <a href="{% url "sign_in" %}">User sign in</a>
+                    <a href="{% url "sign_up" %}">User sign up</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+        
+    <main>
+        {% block content %}
+        
+        {% endblock content %}
+    </main>
+
+    <footer>
+        <div>
+            <nav>
+                <a href="{% url "hotel_admin_panel" %}">Hotel Admin Panel</a>
+                <a href="{% url "hotel_sign_in" %}">Hotel sign in</a> 
+                <a href="{% url "hotel_sign_up" %}">Hotel sign up</a>
+            </nav>
+        </div>
+        <div></div>
+        <div></div>
+        <div></div>
+    </footer>
 </body>
 </html>

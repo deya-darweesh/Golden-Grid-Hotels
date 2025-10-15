@@ -1,0 +1,114 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    position: relative;
+    width: 100%;
+}
+
+nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.logoname {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logoname img {
+    height: 4rem;
+    width: auto;
+}
+
+.logoname h1 {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navlinks {
+    display: flex;
+    gap: 30px;
+}
+
+.navlinks a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 15px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.navlinks a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.log_in_up {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.log_in_up button,
+.log_in_up a {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.log_in_up button:hover,
+.log_in_up a:hover {
+    background-color: white;
+    color: #333;
+}
+
+main {
+    min-height: 60vh;
+    padding: 20px;
+}
+
+footer {
+    background-color: #1a237e;
+    padding: 30px 0;
+    color: white;
+}
+
+footer nav {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    background: none;
+    padding: 0;
+}
+
+footer nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+footer nav a:hover {
+    color: #ffd700;
+}
