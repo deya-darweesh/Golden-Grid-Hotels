@@ -3,12 +3,10 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from datetime import date
 
-# Create your models here.
-
 class Room(models.Model):
     id = models.AutoField(primary_key=True)
     hotel_id = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='hotel_rooms', null=True)
-    room_type = models.CharField(max_length=20, null=False)  # Single, Double, Triple ,VIP
+    room_type = models.CharField(max_length=20, null=False)
     price_per_night = models.DecimalField(max_digits=8, decimal_places=2, null=False)
     capacity = models.IntegerField(null=False)
     description = models.TextField(blank=True, null=True)

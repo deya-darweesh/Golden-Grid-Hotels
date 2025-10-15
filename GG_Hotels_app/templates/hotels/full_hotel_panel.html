@@ -15,9 +15,46 @@
 </div>
 
 <div>
-    <h3>Hotel Management</h3>
-    <p>General hotel information and management tools will be added here.</p>
-    <!-- Future features: Add rooms, manage bookings, etc. -->
+    <h3>Room Management</h3>
+    <a href="{% url 'add_room' %}" style="background: green; color: white; padding: 10px; text-decoration: none;">Add New Room</a>
+    
+    <h4>Your Rooms:</h4>
+    {% for room in hotel_rooms %}
+        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+            <h4>{{ room.room_type }} Room</h4>
+            <p><strong>Price:</strong> ${{ room.price_per_night }}/night</p>
+            <p><strong>Capacity:</strong> {{ room.capacity }} person(s)</p>
+            <p><strong>Available:</strong> {{ room.quantity }} rooms</p>
+            {% if room.description %}
+                <p><strong>Description:</strong> {{ room.description }}</p>
+            {% endif %}
+            <a href="{% url 'edit_room' room.id %}" style="background: blue; color: white; padding: 5px; text-decoration: none;">Edit</a>
+            <a href="{% url 'delete_room' room.id %}" style="background: red; color: white; padding: 5px; text-decoration: none;" onclick="return confirm('Are you sure you want to delete this room?')">Delete</a>
+        </div>
+    {% empty %}
+        <p>You haven't added any rooms yet. <a href="{% url 'add_room' %}">Add your first room!</a></p>
+    {% endfor %}
+</div>
+
+<div>
+    <h3>Service Management</h3>
+    <a href="{% url 'add_service' %}" style="background: green; color: white; padding: 10px; text-decoration: none;">Add New Service</a>
+    
+    <h4>Available Services:</h4>
+    {% for service in services %}
+        <div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">
+            <h4>{{ service.name }}</h4>
+            <p><strong>Price:</strong> ${{ service.price }}</p>
+            <p><strong>Available:</strong> {{ service.available|yesno:"Yes,No" }}</p>
+            {% if service.description %}
+                <p><strong>Description:</strong> {{ service.description }}</p>
+            {% endif %}
+            <a href="{% url 'edit_service' service.id %}" style="background: blue; color: white; padding: 5px; text-decoration: none;">Edit</a>
+            <a href="{% url 'delete_service' service.id %}" style="background: red; color: white; padding: 5px; text-decoration: none;" onclick="return confirm('Are you sure you want to delete this service?')">Delete</a>
+        </div>
+    {% empty %}
+        <p>No services available. <a href="{% url 'add_service' %}">Add your first service!</a></p>
+    {% endfor %}
 </div>
 
 <div>
