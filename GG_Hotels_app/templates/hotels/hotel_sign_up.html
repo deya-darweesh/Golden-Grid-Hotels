@@ -1,24 +1,48 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block head %}
-
+<link rel="stylesheet" href="{% static 'css/hotel-signup.css' %}">
 {% endblock %}
 
 {% block content %}
 
-<h1>Hotel Sign Up</h1>
+<div class="form-container">
+    <h2>Hotel Registration</h2>
+    
+    {% if error_message %}
+        <div class="error-list">
+            <p>{{ error_message }}</p>
+        </div>
+    {% endif %}
 
-{% if error_message %}
-    <p style="color:red">{{ error_message }}</p>
-{% endif %}
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type='submit'>Register Hotel</button>
-</form>
-
-<p><a href="{% url 'hotel_sign_in' %}">Already have an account? Sign In</a></p>
+    <form method="post">
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <div class="help-text">{{ field.help_text }}</div>
+                {% endif %}
+                {% if field.errors %}
+                    <div class="error-list">
+                        {% for error in field.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <button type="submit" class="button-submit">Register Hotel</button>
+        
+        <div class="form-links">
+            <p><a href="{% url 'hotel_sign_in' %}">Already have an account? Sign In</a></p>
+        </div>
+    </form>
+</div>
 
 {% endblock content %}
 

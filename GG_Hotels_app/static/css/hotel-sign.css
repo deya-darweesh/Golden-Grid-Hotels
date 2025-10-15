@@ -1,0 +1,59 @@
+.form-container {
+    width: 350px;
+    margin: 50px auto;
+    padding: 25px;
+    background: lightblue;
+    border: 2px solid blue;
+}
+
+.form-container h2 {
+    text-align: center;
+    color: darkblue;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    color: darkblue;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid blue;
+    background: white;
+}
+
+.button-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: darkblue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button-submit:hover {
+    background-color: navy;
+}
+
+.form-links {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.form-links a {
+    color: darkblue;
+    font-weight: bold;
+}
+
+.error-list {
+    color: red;
+    font-size: 14px;
+}

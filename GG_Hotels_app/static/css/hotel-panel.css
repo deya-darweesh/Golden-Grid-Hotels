@@ -1,0 +1,93 @@
+.panel-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+
+}
+
+.panel-header {
+    text-align: center;
+    color: rgb(0, 0, 0);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.hotel-info {
+    background: lightblue;
+    padding: 15px;
+    border: 1px solid blue;
+    margin-bottom: 20px;
+}
+
+.section {
+    margin-bottom: 30px;
+    padding: 15px;
+    background: lightgray;
+    border: 1px solid gray;
+}
+
+.section h3 {
+    color: darkblue;
+    padding-bottom: 5px;
+}
+
+.add-button {
+    background: green;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.add-button:hover {
+    background: darkgreen;
+}
+
+.item-card {
+    background: white;
+    border: 2px solid blue;
+    margin: 10px 0;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+.item-card h4 {
+    color: blue;
+    margin-bottom: 10px;
+}
+
+.edit-button {
+    background: blue;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+    margin-right: 5px;
+}
+
+.delete-button {
+    background: red;
+    color: white;
+    padding: 5px 10px;
+    text-decoration: none;
+}
+
+.empty-message {
+    color: gray;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
