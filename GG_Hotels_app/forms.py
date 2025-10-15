@@ -154,3 +154,45 @@ class UserProfileForm(forms.ModelForm):
         self.fields['first_name'].help_text = "Your first name"
         self.fields['last_name'].help_text = "Your last name"
         self.fields['email'].help_text = "Your email address"
+
+
+class BookingEditForm(forms.ModelForm):
+    services = forms.ModelMultipleChoiceField(
+        queryset=Service.objects.filter(available=True),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        help_text="Select services for your booking"
+    )
+    
+    class Meta:
+        model = Booking
+        fields = ['check_in_date', 'check_out_date']
+        widgets = {
+            'check_in_date': forms.DateInput(attrs={'type': 'date', 'min': date.today()}),
+            'check_out_date': forms.DateInput(attrs={'type': 'date', 'min': date.today()}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        booking = kwargs.get('instance')
+        super().__init__(*args, **kwargs)
+        
+        if booking:
+            current_services = booking.booking_services.all().values_list('service_id', flat=True)
+            self.fields['services'].initial = current_services
+        
+        self.fields['check_in_date'].help_text = "Update your check-in date"
+        self.fields['check_out_date'].help_text = "Update your check-out date"
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        check_in = cleaned_data.get('check_in_date')
+        check_out = cleaned_data.get('check_out_date')
+        
+        if check_in and check_out:
+            if check_out <= check_in:
+                raise forms.ValidationError("Check-out date must be after check-in date.")
+            
+            if check_in < date.today():
+                raise forms.ValidationError("Check-in date cannot be in the past.")
+        
+        return cleaned_data

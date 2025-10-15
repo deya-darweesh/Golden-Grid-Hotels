@@ -87,9 +87,41 @@
         </div>
     </div>
     
-    <div class="additional-section">
-        <h3>Additional Features</h3>
-        <p>More features will be added here soon...</p>
+    <div class="booking-history-section">
+        <h3>Booking History</h3>
+        
+        {% if bookings %}
+            {% for booking in bookings %}
+                <div class="booking-item">
+                    <div class="booking-details">
+                        <h4>{{ booking.room_id.room_type }} Room - {{ booking.room_id.hotel_id.first_name }} Hotel</h4>
+                        <p><strong>Check-in:</strong> {{ booking.check_in_date }}</p>
+                        <p><strong>Check-out:</strong> {{ booking.check_out_date }}</p>
+                        <p><strong>Total Price:</strong> ${{ booking.total_price }}</p>
+                        
+                        {% if booking.booking_services.all %}
+                            <p><strong>Services:</strong>
+                                {% for booking_service in booking.booking_services.all %}
+                                    {{ booking_service.service.name }}
+                                    {% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                        {% else %}
+                            <p><strong>Services:</strong> No additional services</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="booking-actions">
+                        <a href="{% url 'edit_booking' booking.id %}" class="edit-button">Edit</a>
+                        <a href="{% url 'delete_booking' booking.id %}" class="delete-booking-button" 
+                           onclick="return confirm('Are you sure you want to delete this booking?')">Delete</a>
+                    </div>
+                </div>
+                <hr class="booking-separator">
+            {% endfor %}
+        {% else %}
+            <p class="no-bookings">You have no bookings yet. <a href="{% url 'homepage' %}">Start exploring hotels!</a></p>
+        {% endif %}
     </div>
 </div>
 

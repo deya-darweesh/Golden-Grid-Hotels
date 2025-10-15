@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import Room, Service, Booking, Booking_Service
 from django.contrib.auth.models import User
-from .forms import UserSignInForm, CustomUserSignUpForm, CustomHotelSignUpForm, HotelSignInForm, RoomForm, ServiceForm, BookingForm, UserProfileForm
+from .forms import UserSignInForm, CustomUserSignUpForm, CustomHotelSignUpForm, HotelSignInForm, RoomForm, ServiceForm, BookingForm, UserProfileForm, BookingEditForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -287,4 +287,60 @@ def user_profile(request):
     else:
         form = UserProfileForm(instance=request.user)
     
-    return render(request, 'users/user-panel.html', {'form': form})
+    bookings = Booking.objects.filter(customer_id=request.user).order_by('-check_in_date')
+    
+    return render(request, 'users/user-panel.html', {
+        'form': form,
+        'bookings': bookings
+    })
+
+
+@login_required
+def edit_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, customer_id=request.user)
+    
+    if request.method == 'POST':
+        form = BookingEditForm(request.POST, instance=booking)
+        if form.is_valid():
+            updated_booking = form.save(commit=False)
+            
+            check_in = form.cleaned_data['check_in_date']
+            check_out = form.cleaned_data['check_out_date']
+            nights = (check_out - check_in).days
+            
+            total_price = booking.room_id.price_per_night * nights
+            
+            services = form.cleaned_data['services']
+            for service in services:
+                total_price += service.price
+            
+            updated_booking.total_price = total_price
+            updated_booking.save()
+            
+            booking.booking_services.all().delete()
+            
+            for service in services:
+                Booking_Service.objects.create(
+                    booking=updated_booking,
+                    service=service,
+                    quantity=1
+                )
+            
+            messages.success(request, "Booking updated successfully.")
+            return redirect('user_profile')
+    else:
+        form = BookingEditForm(instance=booking)
+    
+    return render(request, 'users/edit-booking.html', {'form': form, 'booking': booking})
+
+
+@login_required
+def delete_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, customer_id=request.user)
+    
+    if request.method == 'POST':
+        booking.delete()
+        messages.success(request, "Booking deleted successfully.")
+        return redirect('user_profile')
+    
+    return render(request, 'users/delete-booking.html', {'booking': booking})
