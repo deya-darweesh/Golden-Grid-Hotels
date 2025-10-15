@@ -2,8 +2,7 @@ from django import forms
 from .models import Room, Service, Booking, Booking_Service
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-
-# my forms
+from datetime import date
 
 class CustomUserSignUpForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -16,7 +15,6 @@ class CustomUserSignUpForm(UserCreationForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Remove help text for cleaner look
         self.fields['username'].help_text = None
         self.fields['password1'].help_text = None
         self.fields['password2'].help_text = None
@@ -96,3 +94,47 @@ class ServiceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['price'].help_text = "Price in USD"
+
+
+class BookingForm(forms.ModelForm):
+    services = forms.ModelMultipleChoiceField(
+        queryset=Service.objects.filter(available=True),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        help_text="Select additional services (optional)"
+    )
+    
+    class Meta:
+        model = Booking
+        fields = ['check_in_date', 'check_out_date']
+        widgets = {
+            'check_in_date': forms.DateInput(attrs={'type': 'date', 'min': date.today()}),
+            'check_out_date': forms.DateInput(attrs={'type': 'date', 'min': date.today()}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        self.room = kwargs.pop('room', None)
+        super().__init__(*args, **kwargs)
+        self.fields['check_in_date'].help_text = "Select your check-in date"
+        self.fields['check_out_date'].help_text = "Select your check-out date"
+        
+        if self.data.get('check_in_date'):
+            try:
+                check_in = date.fromisoformat(self.data['check_in_date'])
+                self.fields['check_out_date'].widget.attrs['min'] = check_in
+            except ValueError:
+                pass
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        check_in = cleaned_data.get('check_in_date')
+        check_out = cleaned_data.get('check_out_date')
+        
+        if check_in and check_out:
+            if check_out <= check_in:
+                raise forms.ValidationError("Check-out date must be after check-in date.")
+            
+            if check_in < date.today():
+                raise forms.ValidationError("Check-in date cannot be in the past.")
+        
+        return cleaned_data

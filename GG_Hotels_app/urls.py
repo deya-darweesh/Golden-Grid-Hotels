@@ -19,9 +19,5 @@ urlpatterns = [
     path('hotels_list/', views.hotels_list, name='hotels_list'),
     path('rooms_list/', views.rooms_list, name='rooms_list'),
     path('hotel/<int:hotel_id>/rooms/', views.hotel_rooms_list, name='hotel_rooms_list'),
-    # path('sign_up/', views.UserSignUpView.as_view(), name='sign_up'),
-    # path('sign_in/', views.UserSignInView.as_view(), name='sign_in'),
-
-
-   
+    path('book_room/<int:room_id>/', views.create_booking, name='create_booking'),
 ]

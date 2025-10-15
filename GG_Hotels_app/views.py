@@ -1,18 +1,20 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import Room, Service, Booking, Booking_Service
 from django.contrib.auth.models import User
-from .forms import UserSignInForm, CustomUserSignUpForm, CustomHotelSignUpForm, HotelSignInForm, RoomForm, ServiceForm
-from django.contrib.auth.views import LoginView
+from .forms import UserSignInForm, CustomUserSignUpForm, CustomHotelSignUpForm, HotelSignInForm, RoomForm, ServiceForm, BookingForm
 from django.contrib.auth import login, authenticate, logout
-# Create your views here.
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from datetime import datetime
 
 
 
 
 def homepage(request):
     hotels = User.objects.filter(is_staff=True)
-    return render(request, 'homepage.html', {'hotels': hotels})
+    featured_rooms = Room.objects.all()[:6]
+    return render(request, 'homepage.html', {'hotels': hotels, 'featured_rooms': featured_rooms})
 
 
 def user_sign_up(request):
@@ -211,3 +213,53 @@ def hotel_rooms_list(request, hotel_id):
     hotel = User.objects.get(id=hotel_id)
     rooms = Room.objects.filter(hotel_id=hotel_id)
     return render(request, 'gg_pages/hotel_rooms_list.html', {'rooms': rooms, 'hotel': hotel})
+
+
+@login_required
+def create_booking(request, room_id):
+    if request.user.is_staff:
+        messages.error(request, "Hotels cannot make bookings. Please use a customer account.")
+        return redirect('homepage')
+    
+    room = get_object_or_404(Room, id=room_id)
+    
+    if request.method == 'POST':
+        form = BookingForm(request.POST, room=room)
+        if form.is_valid():
+            booking = form.save(commit=False)
+            booking.customer_id = request.user
+            booking.room_id = room
+            
+            check_in = form.cleaned_data['check_in_date']
+            check_out = form.cleaned_data['check_out_date']
+            nights = (check_out - check_in).days
+            
+            total_price = room.price_per_night * nights
+            
+            services = form.cleaned_data['services']
+            for service in services:
+                total_price += service.price
+            
+            booking.total_price = total_price
+            booking.save()
+            
+            for service in services:
+                Booking_Service.objects.create(
+                    booking=booking,
+                    service=service,
+                    quantity=1
+                )
+            
+            messages.success(request, f"Booking confirmed! Total price: ${total_price}")
+            return redirect('homepage')
+    else:
+        form = BookingForm(room=room)
+    
+    services = Service.objects.filter(available=True)
+    context = {
+        'form': form,
+        'room': room,
+        'services': services,
+    }
+    
+    return render(request, 'booking/booking_form.html', context)
