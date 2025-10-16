@@ -13,8 +13,12 @@ from datetime import datetime
 
 def homepage(request):
     hotels = User.objects.filter(is_staff=True)
-    featured_rooms = Room.objects.all()[:6]
+    featured_rooms = Room.objects.all()[:3]
     return render(request, 'homepage.html', {'hotels': hotels, 'featured_rooms': featured_rooms})
+
+
+def about_us(request):
+    return render(request, 'gg_pages/about_us.html')
 
 
 def user_sign_up(request):

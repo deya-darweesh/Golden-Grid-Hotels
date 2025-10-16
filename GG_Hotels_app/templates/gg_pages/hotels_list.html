@@ -1,24 +1,32 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Hotels List{% endblock title %}
 
 {% block head %}
-
-{% endblock %}
+<link rel="stylesheet" href="{% static 'css/hotels-list.css' %}">
+{% endblock head %}
 
 {% block content %}
 
-<h1> Hotels List </h1>
+<div class="hotels-page">
+    <h1>Hotels List</h1>
 
-{% for hotel in hotels %}
-    <div>
-        <h2>{{ hotel.first_name }} {{ hotel.last_name }}</h2>
-        <p>Email: {{ hotel.email }}</p>
-        <p>Hotel Username: {{ hotel.username }}</p>
-        <a href="{% url 'hotel_rooms_list' hotel.id %}">View Rooms</a>
-        <hr>
-    </div>
-{% empty %}
-    <p>No hotels found</p>
-{% endfor %}
+    {% for hotel in hotels %}
+        <div class="hotel-card">
+            <div class="hotel-info">
+                <h2>{{ hotel.first_name }} {{ hotel.last_name }}</h2>
+                <p>Email: {{ hotel.email }}</p>
+                <p>Username: {{ hotel.username }}</p>
+            </div>
+            <div class="hotel-actions">
+                <a href="{% url 'hotel_rooms_list' hotel.id %}">View Rooms</a>
+            </div>
+        </div>
+    {% empty %}
+        <p>No hotels found</p>
+    {% endfor %}
+</div>
 
 {% endblock content %}
 

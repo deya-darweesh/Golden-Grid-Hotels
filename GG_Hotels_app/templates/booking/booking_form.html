@@ -1,99 +1,59 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Book Room - {{ room.room_type }}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/booking-form.css' %}">
+{% endblock head %}
 
 {% block content %}
 <div class="booking-page">
     <h2>Book Room: {{ room.room_type }}</h2>
     
-    <div class="booking-container">
-        <div class="room-details">
-            <div class="room-info">
-                <h3>Room Details</h3>
-                <p><strong>Type:</strong> {{ room.room_type }}</p>
-                <p><strong>Price per night:</strong> ${{ room.price_per_night }}</p>
-                <p><strong>Capacity:</strong> {{ room.capacity }} people</p>
-                <p><strong>Hotel:</strong> {{ room.hotel_id.first_name }}</p>
-                {% if room.description %}
-                    <p><strong>Description:</strong> {{ room.description }}</p>
-                {% endif %}
+    <div class="room-info">
+        <h3>Room Details</h3>
+        <p><strong>Type:</strong> {{ room.room_type }}</p>
+        <p><strong>Price:</strong> ${{ room.price_per_night }}/night</p>
+        <p><strong>Hotel:</strong> {{ room.hotel_id.first_name }}</p>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="dates-row">
+            <div class="date-field">
+                <label>{{ form.check_in_date.label }}</label>
+                {{ form.check_in_date }}
+            </div>
+            <div class="date-field">
+                <label>{{ form.check_out_date.label }}</label>
+                {{ form.check_out_date }}
             </div>
         </div>
         
-        <div class="booking-form-section">
-            <div class="form-container">
-                <h3>Booking Form</h3>
-                
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="message message-{{ message.tags }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                
-                <form method="post" id="booking-form">
-                    {% csrf_token %}
-                    
-                    <div class="date-input">
-                        <label for="{{ form.check_in_date.id_for_label }}">{{ form.check_in_date.label }}</label>
-                        {{ form.check_in_date }}
-                        {% if form.check_in_date.help_text %}
-                            <div class="help-text">{{ form.check_in_date.help_text }}</div>
-                        {% endif %}
-                        {% if form.check_in_date.errors %}
-                            <div class="error-text">{{ form.check_in_date.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="date-input">
-                        <label for="{{ form.check_out_date.id_for_label }}">{{ form.check_out_date.label }}</label>
-                        {{ form.check_out_date }}
-                        {% if form.check_out_date.help_text %}
-                            <div class="help-text">{{ form.check_out_date.help_text }}</div>
-                        {% endif %}
-                        {% if form.check_out_date.errors %}
-                            <div class="error-text">{{ form.check_out_date.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="services-section">
-                        <label>Additional Services</label>
-                        {{ form.services }}
-                        {% if form.services.help_text %}
-                            <div class="help-text">{{ form.services.help_text }}</div>
-                        {% endif %}
-                        {% if form.services.errors %}
-                            <div class="error-text">{{ form.services.errors }}</div>
-                        {% endif %}
-                    </div>
-                    
-                    <div class="price-breakdown">
-                        <div class="price-container">
-                            <h4>Price Breakdown</h4>
-                            <div class="price-calculation">
-                                <p><strong>Room:</strong> ${{ room.price_per_night }} per night</p>
-                                <p><strong>Total nights:</strong> <span class="nights-count">-</span></p>
-                                <p><strong>Room total:</strong> $<span class="room-total">0</span></p>
-                                <p><strong>Services total:</strong> $<span class="services-total">0</span></p>
-                                <hr>
-                                <p><strong>Grand Total:</strong> $<span class="grand-total">0</span></p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    {% if form.non_field_errors %}
-                        <div class="form-errors">
-                            {{ form.non_field_errors }}
-                        </div>
-                    {% endif %}
-                    
-                    <button type="submit" class="confirm-button">Confirm Booking</button>
-                    <a href="{% url 'homepage' %}" class="cancel-button">Cancel</a>
-                </form>
+        <div class="services-section">
+            <label>Services</label>
+            {{ form.services }}
+        </div>
+        
+        <div class="price-section">
+            <h3>Price Breakdown</h3>
+            <div class="price-details">
+                <p><strong>Room:</strong> ${{ room.price_per_night }} per night</p>
+                <p><strong>Total nights:</strong> <span class="nights-count">-</span></p>
+                <p><strong>Room total:</strong> $<span class="room-total">0</span></p>
+                <p><strong>Services total:</strong> $<span class="services-total">0</span></p>
+                <hr>
+                <p><strong>Grand Total:</strong> $<span class="grand-total">0</span></p>
             </div>
         </div>
-    </div>
+        
+        <div class="buttons">
+            <button type="submit">Book Now</button>
+            <a href="{% url 'homepage' %}">Cancel</a>
+        </div>
+    </form>
 </div>
 
 <script>
@@ -163,4 +123,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-{% endblock %}
+{% endblock content %}
+

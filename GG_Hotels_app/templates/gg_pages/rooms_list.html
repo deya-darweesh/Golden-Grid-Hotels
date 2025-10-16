@@ -1,35 +1,44 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}All Rooms{% endblock title %}
 
 {% block head %}
+<link rel="stylesheet" href="{% static 'css/hotel-rooms.css' %}">
 
-{% endblock %}
+{% endblock head %}
 
 {% block content %}
 
-<h1>All Rooms List</h1>
+<div class="rooms-page">
+    <h1>All Rooms</h1>
 
-{% for room in rooms %}
-    <div>
-        <h2>{{ room.room_type }} Room</h2>
-        <p><strong>Hotel:</strong> {{ room.hotel_id.first_name }} {{ room.hotel_id.last_name }}</p>
-        <p><strong>Price per Night:</strong> ${{ room.price_per_night }}</p>
-        <p><strong>Capacity:</strong> {{ room.capacity }} person(s)</p>
-        <p><strong>Available Rooms:</strong> {{ room.quantity }}</p>
-        {% if room.description %}
-            <p><strong>Description:</strong> {{ room.description }}</p>
-        {% endif %}
-        
-        {% if user.is_authenticated and not user.is_staff %}
-            <a href="{% url 'create_booking' room.id %}" class="btn btn-primary">Book This Room</a>
-        {% elif not user.is_authenticated %}
-            <a href="{% url 'sign_in' %}" class="btn btn-secondary">Sign In to Book</a>
-        {% elif user.is_staff %}
-            <span class="text-muted">Hotels cannot make bookings</span>
-        {% endif %}
-        <hr>
-    </div>
-{% empty %}
-    <p>No rooms available</p>
-{% endfor %}
+    {% for room in rooms %}
+        <div class="room-card">
+            <div class="room-info">
+                <h2>{{ room.room_type }} Room</h2>
+                <p><strong>Hotel:</strong> {{ room.hotel_id.first_name }} {{ room.hotel_id.last_name }}</p>
+                <p><strong>Price:</strong> ${{ room.price_per_night }}/night</p>
+                <p><strong>Capacity:</strong> {{ room.capacity }} people</p>
+                <p><strong>Available:</strong> {{ room.quantity }} rooms</p>
+                {% if room.description %}
+                    <p><strong>Description:</strong> {{ room.description }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="room-actions">
+                {% if user.is_authenticated and not user.is_staff %}
+                    <a href="{% url 'create_booking' room.id %}">Book Room</a>
+                {% elif not user.is_authenticated %}
+                    <a href="{% url 'sign_in' %}">Sign In to Book</a>
+                {% elif user.is_staff %}
+                    <span>Hotels cannot book</span>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <p>No rooms available</p>
+    {% endfor %}
+</div>
 
 {% endblock content %}

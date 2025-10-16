@@ -1,0 +1,53 @@
+.rooms-page {
+    padding: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.rooms-page h1 {
+    text-align: center;
+    color: #333;
+}
+
+.back-button {
+    background: #6c757d;
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 3px;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+.room-card {
+    background: #f5f5f5;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.room-info h2 {
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.room-info p {
+    margin: 3px 0;
+    color: #666;
+}
+
+.room-actions a {
+    background: #007bff;
+    color: white;
+    padding: 8px 15px;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.room-actions span {
+    color: #6c757d;
+    font-style: italic;
+}

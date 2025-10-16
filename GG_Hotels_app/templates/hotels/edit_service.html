@@ -1,18 +1,24 @@
 {% extends "base.html" %}
 
 {% block head %}
-
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/hotel-forms.css' %}">
 {% endblock %}
 
 {% block content %}
 
-<h1>Edit Service: {{ service.name }}</h1>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Update Service</button>
-    <a href="{% url 'hotel_admin_panel' %}">Cancel</a>
-</form>
+<div class="form-box">
+    <h1>Edit Service: {{ service.name }}</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        
+        <div class="button-row">
+            <a href="{% url 'hotel_admin_panel' %}" class="button cancel-button">Cancel</a>
+            <button type="submit" class="button edit-button">Update Service</button>
+        </div>
+    </form>
+</div>
 
 {% endblock content %}

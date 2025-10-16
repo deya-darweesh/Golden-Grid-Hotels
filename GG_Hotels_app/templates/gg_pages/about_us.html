@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}About Us - Golden Grid Hotels{% endblock title %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<style>
+    .about-section {
+        background: white;
+        padding: 40px 20px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .about-section h2 {
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 28px;
+        text-align: center;
+    }
+    
+    .about-section p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        font-size: 16px;
+    }
+</style>
+{% endblock head %}
+
+{% block content %}
+
+<section class="about-section">
+    <h2>About Golden Grid Hotels</h2>
+    
+    <p>Welcome to Golden Grid Hotels, your premier destination for comfortable and affordable accommodations. We are dedicated to providing exceptional hospitality services to travelers from around the world.</p>
+    
+    <p>Our mission is to offer clean, comfortable, and well-equipped rooms at competitive prices. Whether you're traveling for business or leisure, our hotels provide all the amenities you need for a pleasant stay.</p>
+    
+    <p>At Golden Grid Hotels, we believe in quality service and customer satisfaction. Our friendly staff is always ready to assist you with your needs and ensure your stay is memorable.</p>
+    
+    <p>We offer a variety of room types to suit different budgets and preferences, along with excellent facilities including fitness centers, swimming pools, laundry services, and restaurants.</p>
+    
+    <p>Thank you for choosing Golden Grid Hotels. We look forward to serving you and making your stay comfortable and enjoyable.</p>
+</section>
+
+{% endblock content %}

@@ -1,49 +1,79 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Homepage - Golden Grid Hotels{% endblock title %} 
 
 {% block head %}
-
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock head %}
 
 {% block content %}
-<section>
+
+<section class="facilities-section">
+    <h2>Our Facilities</h2>
+    <div class="facilities-grid">
+        <div class="facility-box">
+            <img src="{% static 'img/gym.png' %}">
+            <p>Gym</p>
+        </div>
+        <div class="facility-box">
+            <img src="{% static 'img/pool.png' %}">
+            <p>Pool</p>
+        </div>
+        <div class="facility-box">
+            <img src="{% static 'img/laundry.png' %}">
+            <p>Laundry</p>
+        </div>
+        <div class="facility-box">
+            <img src="{% static 'img/restaurant.png' %}">
+            <p>Restaurant</p>
+        </div>
+    </div>
+</section>
+
+<section class="hotels-section">
     <h2>Available Hotels</h2>
     {% for hotel in hotels %}
-        <div>
-            <h3>{{ hotel.first_name }} {{ hotel.last_name }}</h3>
-            <p>Contact: {{ hotel.email }}</p>
-            <p>Username: {{ hotel.username }}</p>
-            <a href="{% url 'hotel_rooms_list' hotel.id %}">View Rooms</a>
+        <div class="hotel-card">
+            <div class="hotel-info">
+                <h3>{{ hotel.first_name }}</h3>
+                <p>Email: {{ hotel.email }}</p>
+            </div>
+            <a href="{% url 'hotel_rooms_list' hotel.id %}" class="view-rooms-button">View Rooms</a>
         </div>
     {% empty %}
         <p>No hotels available</p>
     {% endfor %}
 </section>
 
-<section>
+<section class="rooms-section">
     <h2>Featured Rooms</h2>
     {% for room in featured_rooms %}
-        <div>
-            <h3>{{ room.room_type }} Room - {{ room.hotel_id.first_name }} Hotel</h3>
-            <p><strong>Price per Night:</strong> ${{ room.price_per_night }}</p>
-            <p><strong>Capacity:</strong> {{ room.capacity }} person(s)</p>
-            {% if room.description %}
-                <p><strong>Description:</strong> {{ room.description }}</p>
-            {% endif %}
+        <div class="room-card">
+            <div class="room-info">
+                <h3>{{ room.room_type }} Room</h3>
+                <p>Hotel: {{ room.hotel_id.first_name }}</p>
+                <p>Price: ${{ room.price_per_night }}/night</p>
+                <p>Capacity: {{ room.capacity }} person(s)</p>
+                {% if room.description %}
+                    <p>Description: {{ room.description }}</p>
+                {% endif %}
+            </div>
             
-            {% if user.is_authenticated and not user.is_staff %}
-                <a href="{% url 'create_booking' room.id %}" class="btn btn-primary">Book This Room</a>
-            {% elif not user.is_authenticated %}
-                <a href="{% url 'sign_in' %}" class="btn btn-secondary">Sign In to Book</a>
-            {% elif user.is_staff %}
-                <span class="text-muted">Hotels cannot make bookings</span>
-            {% endif %}
+            <div class="room-actions">
+                {% if user.is_authenticated and not user.is_staff %}
+                    <a href="{% url 'create_booking' room.id %}" class="view-rooms-button">Book This Room</a>
+                {% elif not user.is_authenticated %}
+                    <a href="{% url 'sign_in' %}" class="view-rooms-button">Sign In to Book</a>
+                {% elif user.is_staff %}
+                    <span>Hotels cannot make bookings</span>
+                {% endif %}
+            </div>
         </div>
-        <hr>
     {% empty %}
         <p>No rooms available</p>
     {% endfor %}
 </section>
+
 {% endblock content %}
 
